@@ -1,0 +1,13 @@
+aws-cdk.core
+aws-cdk.aws_ec2
+aws-cdk.aws_iam
+aws-cdk.aws_autoscaling
+aws-cdk.aws_s3_assets
+aws-cdk.aws_dynamodb
+aws-cdk.aws_ssm
+aws-cdk.aws_ecs
+aws-cdk.aws_lambda
+aws-cdk.aws_lambda_event_sources
+aws-cdk.aws_ecr
+aws-cdk.aws_events
+aws_cdk.aws_events_targets

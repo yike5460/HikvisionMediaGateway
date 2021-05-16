@@ -1,0 +1,1102 @@
+Parameters:
+  ElasticIP:
+    Type: String
+    Default: 192.168.1.1
+    Description: elastic IP address like '1.2.3.4 5.6.7.8'
+  MachineType:
+    Type: String
+    Default: c5.xlarge
+    Description: EC2 type to select'
+  GatewayName:
+    Type: String
+    Default: Hikvision
+    Description: custom gateway name'
+  Password:
+    Type: String
+    Default: Hikvision@AWS
+    Description: user input password
+    NoEcho: true
+  Timezone:
+    Type: String
+    Default: "8"
+    Description: timezone offset (e.g. 8 for UTC+8:00)
+  SegmentDuration:
+    Type: String
+    Default: "900"
+    Description: video segment duration
+  SegmentFormat:
+    Type: String
+    Default: copy
+    Description: video segment format
+  SegmentSizing:
+    Type: String
+    Default: default
+    Description: video segment sizing
+  SegmentTranscoding:
+    Type: String
+    Default: copy
+    Description: video segment transcoding method
+  BucketTransition:
+    Type: Number
+    Default: 7
+    Description: days before bucket transition to glacier
+  AssetParametersc47e455c7af8c90f1b03dccac2f807ae1aa9b7a822b3db4fdb145cac34f9c834S3Bucket5174072E:
+    Type: String
+    Description: S3 bucket for asset "c47e455c7af8c90f1b03dccac2f807ae1aa9b7a822b3db4fdb145cac34f9c834"
+  AssetParametersc47e455c7af8c90f1b03dccac2f807ae1aa9b7a822b3db4fdb145cac34f9c834S3VersionKeyB228EF26:
+    Type: String
+    Description: S3 key for asset version "c47e455c7af8c90f1b03dccac2f807ae1aa9b7a822b3db4fdb145cac34f9c834"
+  AssetParametersc47e455c7af8c90f1b03dccac2f807ae1aa9b7a822b3db4fdb145cac34f9c834ArtifactHashE51DF65E:
+    Type: String
+    Description: Artifact hash for asset "c47e455c7af8c90f1b03dccac2f807ae1aa9b7a822b3db4fdb145cac34f9c834"
+  AssetParametersfa6b679372a383c6409d307132b3f2c9aeefe7edbaedcafc11ef226a76d1f210S3BucketB89FB921:
+    Type: String
+    Description: S3 bucket for asset "fa6b679372a383c6409d307132b3f2c9aeefe7edbaedcafc11ef226a76d1f210"
+  AssetParametersfa6b679372a383c6409d307132b3f2c9aeefe7edbaedcafc11ef226a76d1f210S3VersionKey3D359BFC:
+    Type: String
+    Description: S3 key for asset version "fa6b679372a383c6409d307132b3f2c9aeefe7edbaedcafc11ef226a76d1f210"
+  AssetParametersfa6b679372a383c6409d307132b3f2c9aeefe7edbaedcafc11ef226a76d1f210ArtifactHash53B20823:
+    Type: String
+    Description: Artifact hash for asset "fa6b679372a383c6409d307132b3f2c9aeefe7edbaedcafc11ef226a76d1f210"
+Resources:
+  VPCB9E5F0B4:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 11.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: Hikvision/VPC
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/Resource
+  VPCpublicSubnet1Subnet325F50B2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 11.0.0.0/24
+      VpcId:
+        Ref: VPCB9E5F0B4
+      AvailabilityZone: cn-northwest-1a
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: public
+        - Key: aws-cdk:subnet-type
+          Value: Public
+        - Key: Name
+          Value: Hikvision/VPC/publicSubnet1
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/publicSubnet1/Subnet
+  VPCpublicSubnet1RouteTableF591E248:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VPCB9E5F0B4
+      Tags:
+        - Key: Name
+          Value: Hikvision/VPC/publicSubnet1
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/publicSubnet1/RouteTable
+  VPCpublicSubnet1RouteTableAssociationBFFA43B7:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VPCpublicSubnet1RouteTableF591E248
+      SubnetId:
+        Ref: VPCpublicSubnet1Subnet325F50B2
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/publicSubnet1/RouteTableAssociation
+  VPCpublicSubnet1DefaultRoute19059ECD:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: VPCpublicSubnet1RouteTableF591E248
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: VPCIGWB7E252D3
+    DependsOn:
+      - VPCVPCGW99B986DC
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/publicSubnet1/DefaultRoute
+  VPCpublicSubnet2Subnet2B2DFF71:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 11.0.1.0/24
+      VpcId:
+        Ref: VPCB9E5F0B4
+      AvailabilityZone: cn-northwest-1b
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: public
+        - Key: aws-cdk:subnet-type
+          Value: Public
+        - Key: Name
+          Value: Hikvision/VPC/publicSubnet2
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/publicSubnet2/Subnet
+  VPCpublicSubnet2RouteTable55DAB1BB:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VPCB9E5F0B4
+      Tags:
+        - Key: Name
+          Value: Hikvision/VPC/publicSubnet2
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/publicSubnet2/RouteTable
+  VPCpublicSubnet2RouteTableAssociation0849466B:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VPCpublicSubnet2RouteTable55DAB1BB
+      SubnetId:
+        Ref: VPCpublicSubnet2Subnet2B2DFF71
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/publicSubnet2/RouteTableAssociation
+  VPCpublicSubnet2DefaultRoute9ED4D6BC:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: VPCpublicSubnet2RouteTable55DAB1BB
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: VPCIGWB7E252D3
+    DependsOn:
+      - VPCVPCGW99B986DC
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/publicSubnet2/DefaultRoute
+  VPCprivateSubnet1SubnetE522290D:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 11.0.2.0/24
+      VpcId:
+        Ref: VPCB9E5F0B4
+      AvailabilityZone: cn-northwest-1a
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: private
+        - Key: aws-cdk:subnet-type
+          Value: Isolated
+        - Key: Name
+          Value: Hikvision/VPC/privateSubnet1
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/privateSubnet1/Subnet
+  VPCprivateSubnet1RouteTable41566AF9:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VPCB9E5F0B4
+      Tags:
+        - Key: Name
+          Value: Hikvision/VPC/privateSubnet1
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/privateSubnet1/RouteTable
+  VPCprivateSubnet1RouteTableAssociation43FE0C59:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VPCprivateSubnet1RouteTable41566AF9
+      SubnetId:
+        Ref: VPCprivateSubnet1SubnetE522290D
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/privateSubnet1/RouteTableAssociation
+  VPCprivateSubnet2Subnet2F4D9530:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 11.0.3.0/24
+      VpcId:
+        Ref: VPCB9E5F0B4
+      AvailabilityZone: cn-northwest-1b
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: private
+        - Key: aws-cdk:subnet-type
+          Value: Isolated
+        - Key: Name
+          Value: Hikvision/VPC/privateSubnet2
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/privateSubnet2/Subnet
+  VPCprivateSubnet2RouteTableBBE8BB2B:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VPCB9E5F0B4
+      Tags:
+        - Key: Name
+          Value: Hikvision/VPC/privateSubnet2
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/privateSubnet2/RouteTable
+  VPCprivateSubnet2RouteTableAssociation45BBC356:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VPCprivateSubnet2RouteTableBBE8BB2B
+      SubnetId:
+        Ref: VPCprivateSubnet2Subnet2F4D9530
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/privateSubnet2/RouteTableAssociation
+  VPCIGWB7E252D3:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: Hikvision/VPC
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/IGW
+  VPCVPCGW99B986DC:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId:
+        Ref: VPCB9E5F0B4
+      InternetGatewayId:
+        Ref: VPCIGWB7E252D3
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/VPCGW
+  VPCs3VpcEndpoint8D8FCBE9:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      ServiceName:
+        Fn::Join:
+          - ""
+          - - com.amazonaws.
+            - Ref: AWS::Region
+            - .s3
+      VpcId:
+        Ref: VPCB9E5F0B4
+      RouteTableIds:
+        - Ref: VPCpublicSubnet1RouteTableF591E248
+        - Ref: VPCpublicSubnet2RouteTable55DAB1BB
+        - Ref: VPCprivateSubnet1RouteTable41566AF9
+        - Ref: VPCprivateSubnet2RouteTableBBE8BB2B
+      VpcEndpointType: Gateway
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/s3VpcEndpoint/Resource
+  VPCdynamoDBEndpointC610C09E:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      ServiceName:
+        Fn::Join:
+          - ""
+          - - com.amazonaws.
+            - Ref: AWS::Region
+            - .dynamodb
+      VpcId:
+        Ref: VPCB9E5F0B4
+      RouteTableIds:
+        - Ref: VPCpublicSubnet1RouteTableF591E248
+        - Ref: VPCpublicSubnet2RouteTable55DAB1BB
+        - Ref: VPCprivateSubnet1RouteTable41566AF9
+        - Ref: VPCprivateSubnet2RouteTableBBE8BB2B
+      VpcEndpointType: Gateway
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/dynamoDBEndpoint/Resource
+  VPCssmVpcEndpointSecurityGroup80D722A1:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Hikvision/VPC/ssmVpcEndpoint/SecurityGroup
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: "-1"
+      SecurityGroupIngress:
+        - CidrIp:
+            Fn::GetAtt:
+              - VPCB9E5F0B4
+              - CidrBlock
+          Description:
+            Fn::Join:
+              - ""
+              - - "from "
+                - Fn::GetAtt:
+                    - VPCB9E5F0B4
+                    - CidrBlock
+                - :443
+          FromPort: 443
+          IpProtocol: tcp
+          ToPort: 443
+      Tags:
+        - Key: Name
+          Value: Hikvision/VPC
+      VpcId:
+        Ref: VPCB9E5F0B4
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/ssmVpcEndpoint/SecurityGroup/Resource
+  VPCssmVpcEndpoint758BC60F:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      ServiceName: com.amazonaws.cn-northwest-1.ssm
+      VpcId:
+        Ref: VPCB9E5F0B4
+      PrivateDnsEnabled: true
+      SecurityGroupIds:
+        - Fn::GetAtt:
+            - VPCssmVpcEndpointSecurityGroup80D722A1
+            - GroupId
+      SubnetIds:
+        - Ref: VPCprivateSubnet1SubnetE522290D
+        - Ref: VPCprivateSubnet2Subnet2F4D9530
+      VpcEndpointType: Interface
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/ssmVpcEndpoint/Resource
+  VPCec2VpcEndpointSecurityGroup7B6A3EB2:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Hikvision/VPC/ec2VpcEndpoint/SecurityGroup
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: "-1"
+      SecurityGroupIngress:
+        - CidrIp:
+            Fn::GetAtt:
+              - VPCB9E5F0B4
+              - CidrBlock
+          Description:
+            Fn::Join:
+              - ""
+              - - "from "
+                - Fn::GetAtt:
+                    - VPCB9E5F0B4
+                    - CidrBlock
+                - :443
+          FromPort: 443
+          IpProtocol: tcp
+          ToPort: 443
+      Tags:
+        - Key: Name
+          Value: Hikvision/VPC
+      VpcId:
+        Ref: VPCB9E5F0B4
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/ec2VpcEndpoint/SecurityGroup/Resource
+  VPCec2VpcEndpointE425A3EC:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      ServiceName: com.amazonaws.cn-northwest-1.ec2
+      VpcId:
+        Ref: VPCB9E5F0B4
+      PrivateDnsEnabled: true
+      SecurityGroupIds:
+        - Fn::GetAtt:
+            - VPCec2VpcEndpointSecurityGroup7B6A3EB2
+            - GroupId
+      SubnetIds:
+        - Ref: VPCprivateSubnet1SubnetE522290D
+        - Ref: VPCprivateSubnet2Subnet2F4D9530
+      VpcEndpointType: Interface
+    Metadata:
+      aws:cdk:path: Hikvision/VPC/ec2VpcEndpoint/Resource
+  HikvisionSGDEC1B5E9:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Hikvision SG for RDP access
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: "-1"
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          Description: HTTP from anywhere
+          FromPort: 80
+          IpProtocol: tcp
+          ToPort: 80
+        - CidrIp: 0.0.0.0/0
+          Description: HTTPs from anywhere
+          FromPort: 443
+          IpProtocol: tcp
+          ToPort: 443
+        - CidrIp: 0.0.0.0/0
+          Description: RTSP from anywhere
+          FromPort: 554
+          IpProtocol: tcp
+          ToPort: 554
+        - CidrIp: 0.0.0.0/0
+          Description: RTSP from anywhere
+          FromPort: 554
+          IpProtocol: udp
+          ToPort: 554
+        - CidrIp: 0.0.0.0/0
+          Description: Hikvision custom port from anywhere
+          FromPort: 7661
+          IpProtocol: tcp
+          ToPort: 7666
+        - CidrIp: 0.0.0.0/0
+          Description: Hikvision custom port from anywhere
+          FromPort: 15000
+          IpProtocol: tcp
+          ToPort: 17000
+        - CidrIp: 0.0.0.0/0
+          Description: RDP access from anywhere
+          FromPort: 3389
+          IpProtocol: tcp
+          ToPort: 3389
+      VpcId:
+        Ref: VPCB9E5F0B4
+    Metadata:
+      aws:cdk:path: Hikvision/HikvisionSG/Resource
+  S3SQSDDBC12BE1C5:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com.cn
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/AmazonS3FullAccess
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/AmazonSQSFullAccess
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/AmazonDynamoDBFullAccess
+    Metadata:
+      aws:cdk:path: Hikvision/S3SQSDDB/Resource
+  S3SQSDDBDefaultPolicyA02513BD:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - ssm:DescribeParameters
+              - ssm:GetParameters
+              - ssm:GetParameter
+              - ssm:GetParameterHistory
+            Effect: Allow
+            Resource:
+              Fn::Join:
+                - ""
+                - - "arn:"
+                  - Ref: AWS::Partition
+                  - :ssm:cn-northwest-1:795474696122:parameter/
+                  - Ref: ParamGatewayNameCE3724B5
+          - Action:
+              - ssm:DescribeParameters
+              - ssm:GetParameters
+              - ssm:GetParameter
+              - ssm:GetParameterHistory
+            Effect: Allow
+            Resource:
+              Fn::Join:
+                - ""
+                - - "arn:"
+                  - Ref: AWS::Partition
+                  - :ssm:cn-northwest-1:795474696122:parameter/
+                  - Ref: ParamPasswordCCFFC8A5
+          - Action:
+              - ssm:DescribeParameters
+              - ssm:GetParameters
+              - ssm:GetParameter
+              - ssm:GetParameterHistory
+            Effect: Allow
+            Resource:
+              Fn::Join:
+                - ""
+                - - "arn:"
+                  - Ref: AWS::Partition
+                  - :ssm:cn-northwest-1:795474696122:parameter/
+                  - Ref: ParamTimezoneA4691FF6
+        Version: "2012-10-17"
+      PolicyName: S3SQSDDBDefaultPolicyA02513BD
+      Roles:
+        - Ref: S3SQSDDBC12BE1C5
+    Metadata:
+      aws:cdk:path: Hikvision/S3SQSDDB/DefaultPolicy/Resource
+  HikvisionMediaGatewayInstanceProfile945347B7:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - Ref: S3SQSDDBC12BE1C5
+    Metadata:
+      aws:cdk:path: Hikvision/HikvisionMediaGateway/InstanceProfile
+  HikvisionMediaGateway37A9F994:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: cn-northwest-1a
+      IamInstanceProfile:
+        Ref: HikvisionMediaGatewayInstanceProfile945347B7
+      ImageId: ami-015dca6b62dcdd162
+      InstanceType:
+        Ref: MachineType
+      SecurityGroupIds:
+        - Fn::GetAtt:
+            - HikvisionSGDEC1B5E9
+            - GroupId
+      SubnetId:
+        Ref: VPCpublicSubnet1Subnet325F50B2
+      Tags:
+        - Key: Application
+          Value: Hikvision
+        - Key: Name
+          Value: Hikvision/HikvisionMediaGateway
+      UserData:
+        Fn::Base64: >-
+          <powershell>
+
+          python C:\Users\Administrator\curl.py
+
+          </powershell>
+    DependsOn:
+      - S3SQSDDBDefaultPolicyA02513BD
+      - S3SQSDDBC12BE1C5
+    Metadata:
+      aws:cdk:path: Hikvision/HikvisionMediaGateway/Resource
+  HikvisionElaticIP:
+    Type: AWS::EC2::EIPAssociation
+    Properties:
+      EIP:
+        Ref: ElasticIP
+      InstanceId:
+        Ref: HikvisionMediaGateway37A9F994
+    Metadata:
+      aws:cdk:path: Hikvision/HikvisionElaticIP
+  HikvisionBucket1A17FE73:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: hikvisionmedia367baaec-347c-11eb-8dc9-acde48001122
+      LifecycleConfiguration:
+        Rules:
+          - Id: Hikvision
+            Status: Enabled
+            Transitions:
+              - StorageClass: GLACIER
+                TransitionInDays:
+                  Ref: BucketTransition
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: Hikvision/HikvisionBucket/Resource
+  HikvisionDynamoDBB3B134FD:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      KeySchema:
+        - AttributeName: deviceUUID
+          KeyType: HASH
+        - AttributeName: channel
+          KeyType: RANGE
+      AttributeDefinitions:
+        - AttributeName: deviceUUID
+          AttributeType: S
+        - AttributeName: channel
+          AttributeType: S
+      ProvisionedThroughput:
+        ReadCapacityUnits: 10
+        WriteCapacityUnits: 10
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      TableName: deviceMediaURL
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: Hikvision/HikvisionDynamoDB/Resource
+  HikvisionDynamoDBBackF5247E0C:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      KeySchema:
+        - AttributeName: deviceUUID
+          KeyType: HASH
+      AttributeDefinitions:
+        - AttributeName: deviceUUID
+          AttributeType: S
+      ProvisionedThroughput:
+        ReadCapacityUnits: 10
+        WriteCapacityUnits: 10
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      TableName: ip-camera
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: Hikvision/HikvisionDynamoDBBack/Resource
+  ParamGatewayNameCE3724B5:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value:
+        Ref: GatewayName
+      Description: device gateway name
+      Name: GatewayName
+    Metadata:
+      aws:cdk:path: Hikvision/ParamGatewayName/Resource
+  ParamPasswordCCFFC8A5:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value:
+        Ref: Password
+      Description: device gateway password
+      Name: Password
+    Metadata:
+      aws:cdk:path: Hikvision/ParamPassword/Resource
+  ParamTimezoneA4691FF6:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value:
+        Ref: Timezone
+      Description: device gateway timezone
+      Name: Timezone
+    Metadata:
+      aws:cdk:path: Hikvision/ParamTimezone/Resource
+  HikvisionEcsClusterCCA167C1:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterSettings:
+        - Name: containerInsights
+          Value: enabled
+    Metadata:
+      aws:cdk:path: Hikvision/HikvisionEcsCluster/Resource
+  HikvisionECSTaskRoleDC5242FE:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+        Version: "2012-10-17"
+      Description: grant ECS task full access to access S3
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/AmazonS3FullAccess
+      RoleName: HikvisionECSTaskRole
+    Metadata:
+      aws:cdk:path: Hikvision/Hikvision ECS Task Role/Resource
+  HikvisionTaskDef78971C5D:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Environment:
+            - Name: BUCKET_NAME
+              Value:
+                Ref: HikvisionBucket1A17FE73
+            - Name: CAMERA_NAME
+              Value: CAMERA_NAME
+            - Name: INPUT_URL
+              Value: INPUT_URL
+            - Name: SEGMENT_TIME
+              Value:
+                Ref: SegmentDuration
+            - Name: SEGMENT_FORMAT
+              Value:
+                Ref: SegmentFormat
+            - Name: SIZING
+              Value:
+                Ref: SegmentSizing
+            - Name: TRANSCODING
+              Value:
+                Ref: SegmentTranscoding
+            - Name: LOG_LEVEL
+              Value: info
+            - Name: REGION
+              Value: cn-northwest-1
+          Essential: true
+          Image:
+            Fn::Join:
+              - ""
+              - - 795474696122.dkr.ecr.cn-northwest-1.
+                - Ref: AWS::URLSuffix
+                - /ip-camera:latest
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group:
+                Ref: HikvisionTaskDefipcameraLogGroup0778AC2C
+              awslogs-stream-prefix: ecs
+              awslogs-region: cn-northwest-1
+          Memory: 256
+          Name: ip-camera
+      Cpu: "256"
+      ExecutionRoleArn:
+        Fn::GetAtt:
+          - HikvisionTaskDefExecutionRole56F1F4AC
+          - Arn
+      Family: HikvisionHikvisionTaskDef91F5411F
+      Memory: "512"
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      TaskRoleArn:
+        Fn::GetAtt:
+          - HikvisionECSTaskRoleDC5242FE
+          - Arn
+    Metadata:
+      aws:cdk:path: Hikvision/HikvisionTaskDef/Resource
+  HikvisionTaskDefipcameraLogGroup0778AC2C:
+    Type: AWS::Logs::LogGroup
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Metadata:
+      aws:cdk:path: Hikvision/HikvisionTaskDef/ip-camera/LogGroup/Resource
+  HikvisionTaskDefExecutionRole56F1F4AC:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: Hikvision/HikvisionTaskDef/ExecutionRole/Resource
+  HikvisionTaskDefExecutionRoleDefaultPolicy4CE1207E:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - ecr:BatchCheckLayerAvailability
+              - ecr:GetDownloadUrlForLayer
+              - ecr:BatchGetImage
+            Effect: Allow
+            Resource:
+              Fn::Join:
+                - ""
+                - - "arn:"
+                  - Ref: AWS::Partition
+                  - :ecr:cn-northwest-1:795474696122:repository/ip-camera
+          - Action: ecr:GetAuthorizationToken
+            Effect: Allow
+            Resource: "*"
+          - Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - HikvisionTaskDefipcameraLogGroup0778AC2C
+                - Arn
+        Version: "2012-10-17"
+      PolicyName: HikvisionTaskDefExecutionRoleDefaultPolicy4CE1207E
+      Roles:
+        - Ref: HikvisionTaskDefExecutionRole56F1F4AC
+    Metadata:
+      aws:cdk:path: Hikvision/HikvisionTaskDef/ExecutionRole/DefaultPolicy/Resource
+  HikvisionLambdaRole0AC13649:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      Description: grant Lambda full access to backend ECS cluster
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/AmazonECS_FullAccess
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/CloudWatchFullAccess
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/AmazonDynamoDBFullAccess
+      RoleName: HikvisionLambda
+    Metadata:
+      aws:cdk:path: Hikvision/Hikvision Lambda Role/Resource
+  HikvisionLambdaRoleDefaultPolicy2DEAB369:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: dynamodb:ListStreams
+            Effect: Allow
+            Resource: "*"
+          - Action:
+              - dynamodb:DescribeStream
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - HikvisionDynamoDBB3B134FD
+                - StreamArn
+        Version: "2012-10-17"
+      PolicyName: HikvisionLambdaRoleDefaultPolicy2DEAB369
+      Roles:
+        - Ref: HikvisionLambdaRole0AC13649
+    Metadata:
+      aws:cdk:path: Hikvision/Hikvision Lambda Role/DefaultPolicy/Resource
+  SSMFullAccess7D5175ED:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: ssm:*
+            Effect: Allow
+            Resource: "*"
+        Version: "2012-10-17"
+      PolicyName: SSMFullAccess7D5175ED
+      Roles:
+        - Ref: HikvisionLambdaRole0AC13649
+        - Ref: HikvisionLambdaHealthCheckRole74D7F32A
+    Metadata:
+      aws:cdk:path: Hikvision/SSMFullAccess/Resource
+  HikvisionLambda3CCB1C2F:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParametersc47e455c7af8c90f1b03dccac2f807ae1aa9b7a822b3db4fdb145cac34f9c834S3Bucket5174072E
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersc47e455c7af8c90f1b03dccac2f807ae1aa9b7a822b3db4fdb145cac34f9c834S3VersionKeyB228EF26
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersc47e455c7af8c90f1b03dccac2f807ae1aa9b7a822b3db4fdb145cac34f9c834S3VersionKeyB228EF26
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - HikvisionLambdaRole0AC13649
+          - Arn
+      Runtime: nodejs12.x
+      Description: lambda to trigger backend ecs
+      Environment:
+        Variables:
+          BUCKET_NAME:
+            Ref: HikvisionBucket1A17FE73
+          ECS_CLUSTER_NAME:
+            Ref: HikvisionEcsClusterCCA167C1
+          ECS_CONTAINER_NAME: ip-camera
+          ECS_SUBNET_ID_1:
+            Ref: VPCpublicSubnet1Subnet325F50B2
+          ECS_SUBNET_ID_2:
+            Ref: VPCpublicSubnet2Subnet2B2DFF71
+          ECS_TASK_NAME:
+            Ref: HikvisionTaskDef78971C5D
+          SEGMENT_TIME:
+            Ref: SegmentDuration
+          SEGMENT_FORMAT:
+            Ref: SegmentFormat
+          SIZING:
+            Ref: SegmentSizing
+          TRANSCODING:
+            Ref: SegmentTranscoding
+          LOG_LEVEL: info
+          REGION: cn-northwest-1
+          TABLE_NAME: ip-camera
+      FunctionName: HikvisionLambda
+      MemorySize: 128
+      Timeout: 900
+    DependsOn:
+      - HikvisionLambdaRoleDefaultPolicy2DEAB369
+      - HikvisionLambdaRole0AC13649
+    Metadata:
+      aws:cdk:path: Hikvision/Hikvision Lambda/Resource
+      aws:asset:path: asset.c47e455c7af8c90f1b03dccac2f807ae1aa9b7a822b3db4fdb145cac34f9c834
+      aws:asset:property: Code
+  HikvisionLambdaDynamoDBEventSourceHikvisionHikvisionDynamoDBDD0620E0628E9E16:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn:
+        Fn::GetAtt:
+          - HikvisionDynamoDBB3B134FD
+          - StreamArn
+      FunctionName:
+        Ref: HikvisionLambda3CCB1C2F
+      BatchSize: 100
+      MaximumRetryAttempts: 10
+      ParallelizationFactor: 10
+      StartingPosition: LATEST
+    Metadata:
+      aws:cdk:path: Hikvision/Hikvision Lambda/DynamoDBEventSource:HikvisionHikvisionDynamoDBDD0620E0/Resource
+  HikvisionLambdaHealthCheckRole74D7F32A:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      Description: grant Lambda full access to monitor EC2
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/AmazonEC2FullAccess
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/AmazonDynamoDBFullAccess
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/CloudWatchFullAccess
+      RoleName: HikvisionLambdaHc
+    Metadata:
+      aws:cdk:path: Hikvision/Hikvision Lambda Health Check Role/Resource
+  HikvisionLambdaHealthCheckSecurityGroupA46432AF:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Automatic security group for Lambda Function HikvisionHikvisionLambdaHealthCheck1D165403
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: "-1"
+      VpcId:
+        Ref: VPCB9E5F0B4
+    Metadata:
+      aws:cdk:path: Hikvision/Hikvision Lambda Health Check/SecurityGroup/Resource
+  HikvisionLambdaHealthCheckD6EC5550:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParametersfa6b679372a383c6409d307132b3f2c9aeefe7edbaedcafc11ef226a76d1f210S3BucketB89FB921
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersfa6b679372a383c6409d307132b3f2c9aeefe7edbaedcafc11ef226a76d1f210S3VersionKey3D359BFC
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersfa6b679372a383c6409d307132b3f2c9aeefe7edbaedcafc11ef226a76d1f210S3VersionKey3D359BFC
+      Handler: lambda_function.lambda_handler
+      Role:
+        Fn::GetAtt:
+          - HikvisionLambdaHealthCheckRole74D7F32A
+          - Arn
+      Runtime: python3.7
+      Description: lambda to execute health check function
+      FunctionName: HikvisionLambdaHealthCheck
+      Timeout: 180
+      VpcConfig:
+        SecurityGroupIds:
+          - Fn::GetAtt:
+              - HikvisionLambdaHealthCheckSecurityGroupA46432AF
+              - GroupId
+        SubnetIds:
+          - Ref: VPCprivateSubnet1SubnetE522290D
+          - Ref: VPCprivateSubnet2Subnet2F4D9530
+    DependsOn:
+      - HikvisionLambdaHealthCheckRole74D7F32A
+    Metadata:
+      aws:cdk:path: Hikvision/Hikvision Lambda Health Check/Resource
+      aws:asset:path: asset.fa6b679372a383c6409d307132b3f2c9aeefe7edbaedcafc11ef226a76d1f210
+      aws:asset:property: Code
+  cloudwatchRuleBF58828E:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: cloudwatch event to trigger lambda
+      Name: cloudwatchEventRule
+      ScheduleExpression: cron(15 * * * ? *)
+      State: ENABLED
+      Targets:
+        - Arn:
+            Fn::GetAtt:
+              - HikvisionLambdaHealthCheckD6EC5550
+              - Arn
+          Id: Target0
+    Metadata:
+      aws:cdk:path: Hikvision/cloudwatchRule/Resource
+  cloudwatchRuleAllowEventRuleHikvisioncloudwatchRule909E77584806331C:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - HikvisionLambdaHealthCheckD6EC5550
+          - Arn
+      Principal: events.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+          - cloudwatchRuleBF58828E
+          - Arn
+    Metadata:
+      aws:cdk:path: Hikvision/cloudwatchRule/AllowEventRuleHikvisioncloudwatchRule909E7758
+Outputs:
+  mediagatewayelasticIPaddress:
+    Description: media gateway elastic IP address
+    Value:
+      Ref: ElasticIP
+  mediagatewaymachinetype:
+    Description: media gateway machine type
+    Value:
+      Ref: MachineType
+  mediagatewayname:
+    Description: media gateway name
+    Value:
+      Ref: GatewayName
+  mediagatewaypassword:
+    Description: media gateway password
+    Value:
+      Ref: Password
+  mediagatewayinstanceid:
+    Description: media gateway instance id
+    Value: HikvisionMediaGateway
+  mediagatewayvpcid:
+    Description: media gateway vpc id
+    Value:
+      Ref: VPCB9E5F0B4
+  s3bucketname:
+    Description: bucket to store transcoded video clips
+    Value:
+      Ref: HikvisionBucket1A17FE73
+  s3transition:
+    Description: days before object transit to glacier layer
+    Value: check for BucketTransition in Parameters panel
+  ecsclustername:
+    Description: docker cluster to handle video transcoding and archive
+    Value:
+      Ref: HikvisionEcsClusterCCA167C1
+  ecstaskarn:
+    Description: task per video channel to execute video transcoding and archive job
+    Value:
+      Ref: HikvisionTaskDef78971C5D
+  ecsvideotranscodingformat:
+    Description: output video segement format
+    Value:
+      Ref: SegmentFormat
+  ecsvideotranscodingsize:
+    Description: output video segement size
+    Value:
+      Ref: SegmentSizing
+  ecsvideotranscodingduration:
+    Description: output video segement time
+    Value:
+      Ref: SegmentSizing
+
